@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_Cases');
             $table->string('case_number', 50);
+            $table->integer('Value_Status');
             $table->string('Status', 50);
             $table->string('decision', 50);
             $table->text('facts')->nullable();
             $table->text('legal_discussion')->nullable();
             $table->text('verdict')->nullable();
+            $table->string('user',300);
             $table->foreign('id_cases')->references('id')->on('cases')->onDelete('cascade');
             $table->timestamps();
         });

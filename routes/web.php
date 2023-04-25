@@ -20,8 +20,34 @@ Route::get('/', function () {
 
 Auth::routes();
 
-    Route::get('/login','App\Http\Controllers\LoginController@show_login_form')->name('login');
-    Route::post('/login','App\Http\Controllers\LoginController@process_login')->name('login');
-    Route::post('/logout','App\Http\Controllers\LoginController@logout')->name('logout');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::resource('Accounts','App\Http\Controllers\AccountsController');
+    
+    Route::resource('cases','App\Http\Controllers\CasesController');
+
+    Route::resource('CasesAttachments', 'CasesAttachmentController');
+
+    Route::get('/CasesDetails/{id}' ,'App\Http\Controllers\CasesDetailsController@edit');
+
+    Route::get('/Status_show/{id}', 'CasesController@show')->name('Status_show');
+
+    Route::post('/Status_Update/{id}', 'CasesController@Status_Update')->name('Status_Update');
+
+    Route::resource('Archive', 'InvoiceAchiveController');
+
+    Route::get('Case_Winning','CasesController@Case_Winning');
+
+    Route::get('Case_Lost','CasesController@Case_Lost');
+
+    Route::get('Case_Partial','CasesController@Case_Partial');
+
+    Route::get('cases_report','App\Http\Controllers\Cases_ReportController@index');
+
+    Route::post('Search_cases', 'App\Http\Controllers\Cases_ReportController@Search_cases');
+
+    Route::group(['middleware' => ['auth']], function() {
+
+    Route::resource('roles','RoleController');
+
+    Route::resource('users','App\Http\Controllers\UserController');
+        
+        });

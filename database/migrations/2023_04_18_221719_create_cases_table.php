@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('cases', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('cases_number', 50);
+            $table->date('case_Date')->nullable();
+            $table->date('Due_date')->nullable();
             $table->string('court_Name');
             $table->string('room');
             $table->string('base_Number');
@@ -21,7 +23,6 @@ return new class extends Migration
             $table->string('defendant_Name');
             $table->string('claimant_Lawyer');
             $table->string('defendant_Lawyer');
-            $table->date('cases_Date')->nullable();
             $table->text('cases_Subject')->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -11,10 +11,8 @@ class Cases_details extends Model
     protected $fillable = [
         'id_Cases',
         'case_number',
-        'Status',
-        'decision',
         'facts',
-        'legal_discussion',
-        'verdict'
+        'Status',
+        'Value_Status',
     ];
 }

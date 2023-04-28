@@ -16,7 +16,7 @@ use Notifiable;
 */
 protected $fillable = [
 
-    'name', 'email', 'password','phone','location','roles_name','Status'
+    'first_name', 'last_name', 'mother_name','father_name','first_name', 'email', 'password','phone','location','roles_name','Status'
 ];
 /**
 * The attributes that should be hidden for arrays.
@@ -33,7 +33,16 @@ protected $hidden = [
 */
 protected $casts = [
     'email_verified_at' => 'datetime',
-'roles_name' => 'array',
+     'roles_name' => 'array',
 
 ];
+public function case()
+{
+    return $this->belongsToMany(Cases::class, 'lawyer_of_case');
+}
+public function case_1()
+{
+    return $this->belongsToMany(Cases::class, 'client_of_case');
+}
+
 }

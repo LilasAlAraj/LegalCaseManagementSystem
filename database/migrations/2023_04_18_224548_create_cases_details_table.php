@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('cases_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_Cases');
-            $table->string('case_number', 50);
-            $table->integer('Value_Status');
-            $table->string('Status', 50);
-            $table->string('decision', 50);
-            $table->text('facts')->nullable();
-            $table->text('legal_discussion')->nullable();
-            $table->text('verdict')->nullable();
-            $table->string('user',300);
+            $table->string('Status', 50);   //حالة القضية
+            $table->integer('Value_Status'); // رقم الحالة من اجل المقارنة 
+            $table->text('facts')->nullable(); //الحقائق
+            $table->text('legal_discussion')->nullable(); //الوقائع والالتماس
+            $table->unsignedBigInteger('id_Cases')->nullable(); ;
             $table->foreign('id_cases')->references('id')->on('cases')->onDelete('cascade');
+               // $table->string('user_',300); //
             $table->timestamps();
         });
     }

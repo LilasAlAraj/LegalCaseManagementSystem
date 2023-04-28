@@ -16,7 +16,10 @@ public function run()
 {
     
          $user = User::create([
-        'name' => 'boushraalmouhammad', 
+        'first_name' => 'boushra', 
+        'last_name' => 'almouhammad', 
+        'mother_name' => 'amina', 
+        'father_name' => 'omer', 
         'email' => 'boushra.MHD@gmail.com',
         'password' => bcrypt('123456'),
         'location'=>'syria',

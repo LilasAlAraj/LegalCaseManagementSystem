@@ -13,19 +13,14 @@ return new class extends Migration
     {
         Schema::create('cases', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('cases_number', 50);
+            $table->string('case_number', 50);
             $table->date('case_Date')->nullable();
-            $table->date('Due_date')->nullable();
-            $table->string('court_Name');
-            $table->string('room');
-            $table->string('base_Number');
-            $table->string('claimant_Name');
-            $table->string('defendant_Name');
-            $table->string('claimant_Lawyer');
-            $table->string('defendant_Lawyer');
-            $table->text('cases_Subject')->nullable();
+            $table->string('title');
+            // $table->unsignedBigInteger('court_id')->nullable();              هون مو خالص عم يطلعلي غلط
+            // $table->foreign('court_id')->references('id')->on('court')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
+
         });
     }
 

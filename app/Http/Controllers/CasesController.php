@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Cases;
 use App\Models\Cases_attachments;
 use App\Models\Cases_details;
+use App\Models\Desicions;
+use App\Models\Enemy_Lawyers;
+use App\Models\Sessions;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+
 use Illuminate\Support\Facades\Auth;
 
 class CasesController extends Controller
@@ -31,48 +37,72 @@ class CasesController extends Controller
 
     {
         $request->validate([
-            'court_Name' => 'required',
-            'claimant_Name' => 'required',
-            'defendant_Name' => 'required',
-            'claimant_Lawyer' => 'required',
-            'defendant_Lawyer' => 'required',
-            'cases_Date' => 'required',
-            'cases_Subject' => 'required',
+            'court_id' => 'required',
+            'case_number'=>'case_number',
+            'case_Date' => 'required',
+            'title' => 'title',
         ]);
         Cases::create([
-            'cases_Number'=>$request->cases_Number,
+            'case_number'=>$request->case_number,
             'case_Date' => $request->case_Date,
-            'Due_date' => $request->Due_date,
-            'court_Name' => $request->court_Name,
-            'base_Number'=>$request->base_Number,
-            'claimant_Name' => $request->claimant_Name,
-            'defendant_Name' => $request->defendant_Name,
-            'claimant_Lawyer' => $request->claimant_Lawyer,
-            'defendant_Lawyer' => $request->defendant_Lawyer,
-            'cases_Subject' => $request->cases_Subject,
-            'room'=>$request->room,
+            'court_id' => $request->court_id,
+            'title' => $request->title,
+            
             
         ]);
-        $cases_id=Cases::latest()->first()->id;
-        Cases_details::create([
+        //------- القضية لها اكثر من جلسة ---------//
+         
+        $case_id = Cases::latest()->first()->id;
+        $date =  $request->date;
+        $description = $request->description;
+        $delay_date = $request->delay_date;
+        $delay_reasons = $request->delay_reasons;
+        
+        $sessions = new Sessions();
+        $sessions->case_id = $case_id;
+        $sessions->date = $date;
+        $sessions->description = $description;
+        $sessions->delay_date = $delay_date;
+        $sessions->delay_reasons = $delay_reasons;
+        $sessions->save();
 
-            'case_number'=>$request->cases_Number,
-            'Status'=>$request->Status,
-            'decision'=>$request->decision,
+        ///-------  القضية لها اكثر من قرار ---------//
+
+        $desicions = Desicions::find()->all;
+
+        $case = Cases::find()->all;
+
+        $desicions->case()->associate($case)->save();
+                   
+        // --------- للتجريب  -------//
+
+        // $cases_id=Cases::latest()->first()->id; 
+ 
+        // $desicions = $cases_id->desicions;
+
+        // $desicions->case()->associate($cases_id)->save();
+
+
+        //---------  تفاصيل القضية --------------//
+
+        
+        $cases_id=Cases::latest()->first()->id;
+
+            Cases_details::create([
+            'id_cases'=>$cases_id,
             'facts'=>$request->facts,
             'legal_discussion'=>$request->legal_discussion,
-            'verdict'=>$request->verdict,
-            'user' => (Auth::user()->name),
+            // 'user' => (Auth::user()->name),
             
 
         ]);
-        if ($request->hasFile('pic')) {
+        if ($request->hasFile('pic'))
+       {
 
             $cases_id = Cases::latest()->first()->id;
             $image = $request->file('pic');
             $file_name = $image->getClientOriginalName();
             $cases_Number = $request->cases_Number;
-
             $attachments = new Cases_attachments();
             $attachments->file_name = $file_name;
             $attachments->cases_Number = $cases_Number;
@@ -80,10 +110,17 @@ class CasesController extends Controller
             $attachments->cases_id = $cases_id;
             $attachments->save();
 
-            // move pic
+            //-------- move pic ----------//
+
             $imageName = $request->pic->getClientOriginalName();
             $request->pic->move(public_path('Attachments/' . $cases_Number), $imageName);
         }
+
+          // ------- 📩 اشعار اضافة قضية -----------
+
+        $user = User::get();
+        $cases = Cases::latest()->first();
+        Notification::send($user, new \App\Notifications\AddCase($cases));
 
         session()->flash('message', 'This Cases is added');
        
@@ -112,17 +149,9 @@ class CasesController extends Controller
 
     $cases->update([
 
-        'cases_Number'=>$request->cases_Number,
-        'court_Name' => $request->court_Name,
-        'case_Date' => $request->case_Date,
-        'Due_date' => $request->Due_date,
-        'base_Number'=>$request->base_Number,
-        'claimant_Name' => $request->claimant_Name,
-        'defendant_Name' => $request->defendant_Name,
-        'claimant_Lawyer' => $request->claimant_Lawyer,
-        'defendant_Lawyer' => $request->defendant_Lawyer,
-        'cases_Subject' => $request->cases_Subject,
-        'room'=>$request->room,
+        'id_cases'=>$cases_id,
+        'facts'=>$request->facts,
+        'legal_discussion'=>$request->legal_discussion,
 
 
     ]);
@@ -133,7 +162,7 @@ class CasesController extends Controller
    public function destroy(Request $request)
    {
       
-       $id = $request->invoice_id;
+       $id = $request->case_id;
        $cases = Cases::where('id', $id)->first();
        $Details = Cases_attachments::where('cases_id', $id)->first();
 
@@ -178,34 +207,28 @@ class CasesController extends Controller
         
          Cases_Details::create([
                 'id_Cases' => $request->id_Cases,
-                'case_number' => $request->case_number,
                 'Status' => $request->Status,
                 'Value_Status' => 1,
-                'decision' => $request->decision,
                 'facts' => $request->facts,
                 'legal_discussion' => $request->legal_discussion,
-                'verdict' => $request->verdict,
-                'user' => (Auth::user()->name),
+                // 'user' => (Auth::user()->name),
                 
             ]);
          
         }
          else {
 
-            $invoices->update([
+            $cases->update([
                 'Value_Status' => 3,
                 'Status' => $request->Status,
             ]);
             Cases_Details::create([
                 'id_Cases' => $request->id_Cases,
-                'case_number' => $request->case_number,
                 'Status' => $request->Status,
                 'Value_Status' => 1,
-                'decision' => $request->decision,
                 'facts' => $request->facts,
                 'legal_discussion' => $request->legal_discussion,
-                'verdict' => $request->verdict,
-                'user' => (Auth::user()->name),
+                // 'user' => (Auth::user()->name),
             ]);
         }
           
@@ -232,6 +255,25 @@ class CasesController extends Controller
     {
         $cases = Cases::where('Value_Status',3)->get();
         return view('cases.cases_Partial',compact('cases'));
+    }
+
+    public function MarkAsRead_all (Request $request)
+    {
+
+        $userUnreadNotification= auth()->user()->unreadNotifications;
+
+        if($userUnreadNotification) {
+
+            $userUnreadNotification->markAsRead();
+
+            $userUnreadNotification->save();
+
+            session()->flash('mark_as_read');
+
+            return back();
+        }
+
+
     }
 
 

@@ -10,16 +10,36 @@ class Cases extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'cases_number',
-        'court_Name',
-        'room',
-        'base_Number',
-        'claimant_Name',
-        'defendant_Name',
-        'claimant_Lawyer',
-        'defendant_Lawyer',
+        'case_number',
         'cases_Date',
-        'cases_Subject'
+        'title',
+        'court_id',
     ];
-    protected $dates = ['deleted_at'];
+
+    public function sessions()
+    {
+        return $this->hasMany(Sessions::class);
+    }
+    public function desicions()
+    {
+        return $this->hasMany(Desicions::class);
+    }
+    public function enemy_lawyers()
+    {
+        return $this->hasMany(Enemy_Lawyers::class);
+    }
+    public function enemy_clients()
+    {
+        return $this->hasMany(Enemy_Clients::class);
+    }
+    public function user()
+    {
+        return $this->belongsToMany(User::class, 'lawyer_of_case');
+    }
+    public function user_1()
+    {
+        return $this->belongsToMany(User::class, 'client_of_case');
+    }
+
+    
 }

@@ -15,7 +15,7 @@ class CaseArchiveController extends Controller
 
     public function update(Request $request)
     {
-         $id = $request->invoice_id;
+         $id = $request->case_id;
          $flight = Cases::withTrashed()->where('id', $id)->restore();
          session()->flash('restore_cases', $flight);
          return redirect('/cases');
@@ -23,7 +23,7 @@ class CaseArchiveController extends Controller
 
     public function destroy(Request $request)
     {
-         $cases = Cases::withTrashed()->where('id',$request->invoice_id)->first();
+         $cases = Cases::withTrashed()->where('id',$request->case_id)->first();
          $cases->forceDelete();
          session()->flash('delete_cases', $cases);
          return redirect('/Archive');

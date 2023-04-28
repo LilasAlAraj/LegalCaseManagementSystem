@@ -27,7 +27,8 @@ class CasesDetailsController extends Controller
 
    public function destroy(Request $request)
 
-   {
+   { 
+    
     $cases=Cases_attachments::findOrFail($request->id_file);
     $cases->delete();
     Storage::disk('public_uploads')->delete($request->cases_number.'/'.$request->file_name);

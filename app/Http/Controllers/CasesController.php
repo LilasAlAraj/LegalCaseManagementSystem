@@ -6,6 +6,7 @@ use App\Models\Cases;
 use App\Models\Cases_attachments;
 use App\Models\Cases_details;
 use App\Models\Desicions;
+use App\Models\Enemy_Clients;
 use App\Models\Enemy_Lawyers;
 use App\Models\Sessions;
 use App\Models\User;
@@ -41,47 +42,81 @@ class CasesController extends Controller
             'case_number'=>'case_number',
             'case_Date' => 'required',
             'title' => 'title',
+            'enemy_lawyer_name'=> 'enemy_lawyer_name',
+            'enemy_client_name'=> 'enemy_client_name',
         ]);
         Cases::create([
             'case_number'=>$request->case_number,
             'case_Date' => $request->case_Date,
             'court_id' => $request->court_id,
             'title' => $request->title,
+            'enemy_client_name'=>$request->enemy_client_name,
+            'enemy_lawyer_name'=>$request->enemy_lawyer_name,
             
             
         ]);
+        //-----المحاميين الخصم -------------------//
+
+        $case_id = Cases::latest()->first()->id;
+
+        $enemy_lawyer=new Enemy_Lawyers();
+
+        $enemy_lawyer->case_id=$case_id;
+
+        $enemy_lawyer->name=$request->enemy_lawyer_name;
+
+        $enemy_lawyer->number_phone=$request->number_phone;
+
+        $enemy_lawyer->save();
+
+        //------------------الخصم-------------------//
+
+        $case_id = Cases::latest()->first()->id;
+
+        $enemy_client = new Enemy_Clients();
+
+        $enemy_client->case_id=$case_id;
+
+        $enemy_client->name=$request->enemy_client_name;
+
+        $enemy_client->number_phone=$request->number_phone;
+    
+        $enemy_client->save();
+
         //------- القضية لها اكثر من جلسة ---------//
          
         $case_id = Cases::latest()->first()->id;
-        $date =  $request->date;
-        $description = $request->description;
-        $delay_date = $request->delay_date;
-        $delay_reasons = $request->delay_reasons;
-        
+
         $sessions = new Sessions();
+
         $sessions->case_id = $case_id;
-        $sessions->date = $date;
-        $sessions->description = $description;
-        $sessions->delay_date = $delay_date;
-        $sessions->delay_reasons = $delay_reasons;
+
+        $sessions->date = $request->date;
+
+        $sessions->description = $request->description;
+
+        $sessions->delay_date =$request->delay_date;
+
+        $sessions->delay_reasons =$request->delay_reasons;
+
         $sessions->save();
 
         ///-------  القضية لها اكثر من قرار ---------//
 
-        $desicions = Desicions::find()->all;
-
-        $case = Cases::find()->all;
-
-        $desicions->case()->associate($case)->save();
-                   
-        // --------- للتجريب  -------//
-
-        // $cases_id=Cases::latest()->first()->id; 
+          $case_id = Cases::latest()->first()->id;
  
-        // $desicions = $cases_id->desicions;
+          $desicions = new Desicions();
 
-        // $desicions->case()->associate($cases_id)->save();
+          $desicions->number =$request->number; 
 
+          $desicions->case_id = $case_id;
+
+          $desicions->description = $request->description;
+
+          $desicions->date = $request->date;
+
+
+          $desicions->save();
 
         //---------  تفاصيل القضية --------------//
 
@@ -89,9 +124,13 @@ class CasesController extends Controller
         $cases_id=Cases::latest()->first()->id;
 
             Cases_details::create([
+
             'id_cases'=>$cases_id,
+
             'facts'=>$request->facts,
+
             'legal_discussion'=>$request->legal_discussion,
+
             // 'user' => (Auth::user()->name),
             
 
@@ -100,27 +139,39 @@ class CasesController extends Controller
        {
 
             $cases_id = Cases::latest()->first()->id;
+
             $image = $request->file('pic');
+
             $file_name = $image->getClientOriginalName();
+
             $cases_Number = $request->cases_Number;
+
             $attachments = new Cases_attachments();
+
             $attachments->file_name = $file_name;
+
             $attachments->cases_Number = $cases_Number;
+
             $attachments->Created_by = Auth::user()->name;
+
             $attachments->cases_id = $cases_id;
+
             $attachments->save();
 
             //-------- move pic ----------//
 
             $imageName = $request->pic->getClientOriginalName();
+
             $request->pic->move(public_path('Attachments/' . $cases_Number), $imageName);
         }
 
           // ------- 📩 اشعار اضافة قضية -----------
 
-        $user = User::get();
-        $cases = Cases::latest()->first();
-        Notification::send($user, new \App\Notifications\AddCase($cases));
+         $user = User::get();
+
+         $cases = Cases::latest()->first();
+
+         Notification::send($user, new \App\Notifications\AddCase($cases));
 
         session()->flash('message', 'This Cases is added');
        
@@ -131,12 +182,14 @@ class CasesController extends Controller
    public function show($id)
    {
        $cases = Cases::where('id', $id)->first();
+
        return view('cases.status_update', compact('cases'));
    }
     
    public function edit($id)
    {
        $cases = Cases::where('id', $id)->first();
+
        return view('cases.edit_case', compact('cases'));
    }
 
@@ -149,13 +202,16 @@ class CasesController extends Controller
 
     $cases->update([
 
-        'id_cases'=>$cases_id,
-        'facts'=>$request->facts,
-        'legal_discussion'=>$request->legal_discussion,
+        'case_number'=>$request->case_number,
+
+        'case_Date'=>$request->case_Date,
+
+        'court_id'=>$request->court_id,
 
 
     ]);
     session()->flash('edit', 'تم تعديل القضية بنجاح');
+
     return back();
    }
 
@@ -163,21 +219,36 @@ class CasesController extends Controller
    {
       
        $id = $request->case_id;
+
        $cases = Cases::where('id', $id)->first();
+
        $Details = Cases_attachments::where('cases_id', $id)->first();
 
-        $id_page =$request->id_page;
+        $id_Archive =$request->id_Archive;
+       
+       
+        // اعتبرتا مثبتة  عندك برقم 2 كدليل انو الطلب جاييني كارشيف   id   ليلاس هي ال 
 
+        //input type hidden انو اذا القيمه تساوي 2 معناتو ارشفة ,,,طبعا انا اعتبرت انو في  
 
-       if (!$id_page==2) {
+        //     //<div class="modal-body">
+        //     هل انت متاكد من عملية الارشفة ؟
+        //     <input type="hidden" name="case_id" id="case_id" value="">
+        //     <input type="hidden" name="id_Archive" id="id_Archive" value="2">
+         // </div>
+
+       if (!$id_Archive==2) {
 
        if (!empty($Details->cases_number)) {
 
            Storage::disk('public_uploads')->deleteDirectory($Details->cases_number);
        }
-
+      //   يعني رح تحذفها بشكل نهائي forceDelete 
+      
        $cases->forceDelete();
+
        session()->flash('delete_case');
+
        return redirect('/cases');
 
        }
@@ -185,7 +256,9 @@ class CasesController extends Controller
        else {
 
            $cases->delete();
+
            session()->flash('archive_case');
+
            return redirect('/Archive');
        }
    }
@@ -194,12 +267,12 @@ class CasesController extends Controller
    public function Status_Update($id, Request $request)
 
     {
-        $invoices = Cases::findOrFail($id);
+        $cases = Cases::findOrFail($id);
 
         if ($request->Status === 'رابحة') 
         {
 
-            $invoices->update([
+            $cases->update([
                 'Value_Status' => 1,
                 'Status' => $request->Status,
             ]);
@@ -235,6 +308,7 @@ class CasesController extends Controller
 
         
         session()->flash('Status_Update');
+        
         return redirect('/cases');
 
     }
@@ -242,18 +316,21 @@ class CasesController extends Controller
     public function Case_Winning()
     {
         $cases = Cases::where('Value_Status', 1)->get();
+
         return view('cases.cases_winning',compact('cases'));
     }
 
     public function Case_Lost()
     {
         $cases = Cases::where('Value_Status',2)->get();
+
         return view('cases.cases_lost',compact('cases'));
     }
 
     public function Case_Partial()
     {
         $cases = Cases::where('Value_Status',3)->get();
+
         return view('cases.cases_Partial',compact('cases'));
     }
 

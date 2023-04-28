@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('cases_attachments', function (Blueprint $table) {
             $table->id();
-            $table->string('file_name', 999);
-            $table->integer('cases_number', 999);
-            $table->string('Created_by', 999);
-            $table->unsignedBigInteger('cases_id')->nullable();
+            $table->string('file_name');
+            $table->integer('cases_number');
+            $table->string('Created_by');
+            $table->unsignedBigInteger('cases_id');
             $table->foreign('cases_id')->references('id')->on('cases')->onDelete('cascade');
             $table->timestamps();
         });

@@ -26,6 +26,10 @@ Route::get('/', function () {
 
     Route::resource('CasesAttachments', 'App\Http\Controllers\CasesAttachmentController'); // 🌷مرفقات القضية
      
+    Route::resource('enemylawyer','App\Http\Controllers\EnemyClientsController');  // 🌷محاميين الخصم
+
+    Route::resource('enemyclient','App\Http\Controllers\EnemyClientsController');  //  🌷الخصم 
+
     Route::resource('sessions','App\Http\Controllers\SessionsController');   // 🌷جلسات القضية
   
     Route::get('/CasesDetails/{id}' ,'App\Http\Controllers\CasesDetailsController@edit');  // 🌷تفاصيل القضية

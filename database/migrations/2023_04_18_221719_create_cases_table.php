@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('cases', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('case_number', 50);
-            $table->date('case_Date')->nullable();
             $table->string('title');
-            // $table->unsignedBigInteger('court_id')->nullable();              هون مو خالص عم يطلعلي غلط
+            $table->integer('case_number');
+            $table->date('case_Date');
+            $table->string('enemy_lawyer_name')->nullable();
+            $table->string('enemy_client_name')->nullable();
+            // $table->unsignedBigInteger('court_id')->nullable();
             // $table->foreign('court_id')->references('id')->on('court')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

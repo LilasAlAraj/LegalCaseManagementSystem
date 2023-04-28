@@ -14,6 +14,8 @@ class Cases extends Model
         'cases_Date',
         'title',
         'court_id',
+        'enemy_lawyer_name',
+        'enemy_client_name'
     ];
 
     public function sessions()

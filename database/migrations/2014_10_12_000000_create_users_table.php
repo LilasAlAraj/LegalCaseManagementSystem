@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('mother_name');
             $table->string('father_name');
+            $table->date('birth_date');
+            $table->string('birth_place');
             $table->string('email')->unique();
             $table->text('roles_name');
             $table->string('Status', 10);

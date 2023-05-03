@@ -21,7 +21,6 @@ class EnemyClientsController extends Controller
     $request->validate([
         'name' =>'required|string|max:255',
         'phone_number' =>'required',
-        'case_id' =>'required',
     ]);
 
     $enemy_client=new Enemy_Clients();
@@ -29,8 +28,6 @@ class EnemyClientsController extends Controller
     $enemy_client->name=$request->name;
 
     $enemy_client->phone_number=$request->phone_number;
-
-    $enemy_client->case_id=$request->case_id;
 
     $enemy_client->save();
 

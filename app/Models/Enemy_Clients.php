@@ -19,6 +19,6 @@ class Enemy_Clients extends Model
     
     public function case()
     {
-        return $this->belongsTo(Cases::class);
+        return $this->belongsToMany(Cases::class,'enemy_clients_of_cases');
     }
 }

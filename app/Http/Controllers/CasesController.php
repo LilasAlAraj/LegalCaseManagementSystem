@@ -24,13 +24,20 @@ class CasesController extends Controller
 
     {
         $cases=Cases::get();
-        return view('cases.cases',compact('cases'));
+
+        $cases_attachments=Cases_attachments::all();
+
+        $cases_details=Cases_details::all();
+
+        return view('cases.index',compact('cases','cases_attachments','cases_details'));
+        
 
     }
 
     public function create()
     {
         $cases=Cases::all();
+
         return view('cases.cases_add',compact('cases'));
     }
 
@@ -38,12 +45,13 @@ class CasesController extends Controller
 
     {
         $request->validate([
+
             'court_id' => 'required',
             'case_number'=>'case_number',
             'case_Date' => 'required',
             'title' => 'title',
-            'enemy_lawyer_name'=> 'enemy_lawyer_name',
-            'enemy_client_name'=> 'enemy_client_name',
+            'judge'=> 'judge',
+            'side_judge'=> 'side_judge',
         ]);
         Cases::create([
             'case_number'=>$request->case_number,
@@ -51,7 +59,7 @@ class CasesController extends Controller
             'court_id' => $request->court_id,
             'title' => $request->title,
             'enemy_client_name'=>$request->enemy_client_name,
-            'enemy_lawyer_name'=>$request->enemy_lawyer_name,
+            'side_judge'=>$request->side_judge,
             
             
         ]);
@@ -59,29 +67,33 @@ class CasesController extends Controller
 
         $case_id = Cases::latest()->first()->id;
 
-        $enemy_lawyer=new Enemy_Lawyers();
-
-        $enemy_lawyer->case_id=$case_id;
+        $enemy_lawyer=new Enemy_Lawyers();          
 
         $enemy_lawyer->name=$request->enemy_lawyer_name;
 
         $enemy_lawyer->number_phone=$request->number_phone;
 
-        $enemy_lawyer->save();
+        $case_id->enemy_lawyers()->save($enemy_lawyer);
+
+        // $case_id->enemy_clients()->save($request->enemy_client_name);
+        // $case_id->cases()->save($request->case_number);
+        // $case_id->save();
+
 
         //------------------الخصم-------------------//
 
-        $case_id = Cases::latest()->first()->id;
 
+        $case_id = Cases::latest()->first()->id;
+ 
         $enemy_client = new Enemy_Clients();
 
-        $enemy_client->case_id=$case_id;
-
+        
         $enemy_client->name=$request->enemy_client_name;
 
         $enemy_client->number_phone=$request->number_phone;
-    
-        $enemy_client->save();
+ 
+        $case_id->enemy_clients()->save($enemy_client);
+
 
         //------- القضية لها اكثر من جلسة ---------//
          

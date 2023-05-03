@@ -14,8 +14,8 @@ class Cases extends Model
         'cases_Date',
         'title',
         'court_id',
-        'enemy_lawyer_name',
-        'enemy_client_name'
+        'judge',
+        'judge_side'
     ];
 
     public function sessions()
@@ -28,11 +28,11 @@ class Cases extends Model
     }
     public function enemy_lawyers()
     {
-        return $this->hasMany(Enemy_Lawyers::class);
+        return $this->belongsToMany(Enemy_Lawyers::class,'enemy_lawyer_of_cases');
     }
     public function enemy_clients()
     {
-        return $this->hasMany(Enemy_Clients::class);
+        return $this->belongsToMany(Enemy_Clients::class,'enemy_client_of_cases');
     }
     public function user()
     {

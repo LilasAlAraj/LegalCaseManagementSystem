@@ -26,6 +26,8 @@ public function run()
         'phone'=>'0982371710',
         'roles_name' => ["owner"],
         'Status' => 'مفعل',
+        'birth_date' => '2001-01-01',
+        'birth_place' => 'Aleppo-Syria',
         ]);
   
         $role = Role::create(['name' => 'owner']);

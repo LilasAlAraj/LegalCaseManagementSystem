@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->integer('case_number');
             $table->date('case_Date');
-            $table->string('enemy_lawyer_name')->nullable();
-            $table->string('enemy_client_name')->nullable();
+            $table->string('judge');
+            $table->string('side_judge');  //مساعد القاضي 
             // $table->unsignedBigInteger('court_id')->nullable();
             // $table->foreign('court_id')->references('id')->on('court')->onDelete('cascade');
             $table->softDeletes();

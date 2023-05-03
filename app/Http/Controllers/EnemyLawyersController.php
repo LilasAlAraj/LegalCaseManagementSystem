@@ -20,12 +20,11 @@ class EnemyLawyersController extends Controller
     {
         $request->validate([
             'name' =>'required|max:255',
-            'case_id' =>'required',
             'number_phone' =>'required|max:255',
         
         ]);
         
-        $request->only(['name','case_id','number_phone']);
+        $request->only(['name','number_phone']);
 
         $enemy_lawyer = Enemy_Lawyers::create($request->only(['name','case_id','number_phone']));
 

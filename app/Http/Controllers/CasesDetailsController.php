@@ -16,8 +16,11 @@ class CasesDetailsController extends Controller
 
    
         $cases = Cases::where('id',$id)->first();
+
         $details  = Cases_details::where('id_cases',$id)->get();
+
         $attachments  = Cases_attachments::where('cases_id',$id)->get();
+
         return view('Cases.cases',compact('cases','details','attachments'));
         
     }
@@ -30,9 +33,13 @@ class CasesDetailsController extends Controller
    { 
     
     $cases=Cases_attachments::findOrFail($request->id_file);
+    
     $cases->delete();
+
     Storage::disk('public_uploads')->delete($request->cases_number.'/'.$request->file_name);
+
     session()->flash('delete', 'تم حذف المرفق بنجاح');
+    
     return back();
    }
 

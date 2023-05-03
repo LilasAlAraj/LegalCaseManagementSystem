@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enemy_client', function (Blueprint $table) {
+        Schema::create('enemy_lawyer_of_cases', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('phone_number');
+            $table->unsignedBigInteger('enemy_lawyer_id')->nullable();
+            $table->foreign('enemy_lawyer_id')->references('id')->on('enemy_lawyer');
+            $table->unsignedBigInteger('case_id')->nullable();
+            $table->foreign('case_id')->references('id')->on('cases');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enemy_client');
+        Schema::dropIfExists('enemy_lawyer_of_cases');
     }
 };

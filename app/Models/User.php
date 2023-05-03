@@ -16,7 +16,7 @@ use Notifiable;
 */
 protected $fillable = [
 
-    'first_name', 'last_name', 'mother_name','father_name','first_name', 'email', 'password','phone','location','roles_name','Status'
+    'first_name', 'last_name', 'mother_name','father_name','first_name', 'email', 'password','phone','location','roles_name','Status','birth_date','birth_place',
 ];
 /**
 * The attributes that should be hidden for arrays.

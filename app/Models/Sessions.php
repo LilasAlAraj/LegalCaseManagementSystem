@@ -10,6 +10,7 @@ class Sessions extends Model
     use HasFactory;
     protected $fillable = [
         'date',
+        'number',
         'description',
         'delay_date',
         'delay_reasons',

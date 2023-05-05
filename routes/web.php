@@ -31,8 +31,18 @@ Route::get('/', function () {
     Route::resource('enemyclient','App\Http\Controllers\EnemyClientsController');  //  🌷الخصم 
 
     Route::resource('sessions','App\Http\Controllers\SessionsController');   // 🌷جلسات القضية
+
+    Route::resource('desicions','App\Http\Controllers\DesicionsController'); //  🌷قرارات القضية
+
+    Route::resource('courts','App\Http\Controllers\courtsController'); // 🌷المحاكم 
   
-    Route::get('/CasesDetails/{id}' ,'App\Http\Controllers\CasesDetailsController@edit');  // 🌷تفاصيل القضية
+    Route::resource('CasesDetails' ,'App\Http\Controllers\CasesDetailsController');  // 🌷تفاصيل القضية
+
+    Route::get('download/{cases_number}/{file_name}', 'App\Http\Controllers\CasesAttachmentController@get_file'); // 🌷تنزيل مرفق 
+
+    Route::get('View_file/{cases_number}/{file_name}', 'App\Http\Controllers\CasesAttachmentController@open_file'); //🌷 عرض مرفق
+
+    Route::post('delete_file', 'App\Http\Controllers\CasesAttachmentController@destroy')->name('delete_file'); //   🌷حذف مرفق 
 
     Route::get('/Status_show/{id}', 'CasesController@show')->name('Status_show');        // حالة القضية (رابحة -خاسرة -جاري العمل عليها - مفتوحة )🌷
 

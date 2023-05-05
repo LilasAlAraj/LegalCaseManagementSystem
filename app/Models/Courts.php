@@ -13,7 +13,7 @@ class Courts extends Model
     use SoftDeletes;
     protected $fillable = [
         'name',
-        'type',
+        'place',
     ];
     protected $dates = ['deleted_at'];
 }

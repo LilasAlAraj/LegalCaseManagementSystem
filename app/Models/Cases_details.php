@@ -10,9 +10,8 @@ class Cases_details extends Model
     use HasFactory;
     protected $fillable = [
         'id_Cases',
+        'title',
         'case_number',
         'facts',
-        'Status',
-        'Value_Status',
     ];
 }

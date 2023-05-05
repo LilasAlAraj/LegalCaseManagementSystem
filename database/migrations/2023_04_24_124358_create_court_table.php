@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('court', function (Blueprint $table) {
-            $table->id();
-            $table->string('type');
+            $table->Increments('id');
+            $table->string('place');
             $table->string('name');
-            $table->softDeletes();
+            // $table->softDeletes();
             $table->timestamps();
         });
     }

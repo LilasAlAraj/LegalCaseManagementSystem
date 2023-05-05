@@ -36,6 +36,13 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads' => [
+            'driver' => 'local',
+            'root' => public_path() . '/Attachments', 
+            'url' => env('APP_URL'). '/Attachments',
+            'visibility' => 'public',  
+        ],
+        
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

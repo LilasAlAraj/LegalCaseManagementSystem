@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('cases_details', function (Blueprint $table) {
             $table->id();
-            $table->string('Status', 50);   //حالة القضية
-            $table->integer('Value_Status'); // رقم الحالة من اجل المقارنة 
+            $table->string('title');
             $table->text('facts')->nullable(); //الحقائق
             $table->text('legal_discussion')->nullable(); //الوقائع والالتماس
             $table->unsignedBigInteger('id_Cases')->nullable(); ;

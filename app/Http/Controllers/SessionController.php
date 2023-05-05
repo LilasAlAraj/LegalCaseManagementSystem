@@ -19,26 +19,35 @@ class SessionController extends Controller
     {
          
         $request->validate([
+            'number'=>'required',
             'date' => 'required',
             'description' => 'required',
             'delay_date'=>'required',
             'delay_reasons'=>'required',
         ],[
-
+        'number.required'=>'please fill the session date',
         'date.required'=>'please fill the session date',
         'description.required'=>'please fill the description',
         'delay_date.required'=>'please fill the delay_date',
         'delay_reasons.required'=>'please fill the delay_reasons',
+
           
         ]);
 
         Sessions::create([
             
             'case_id' => $request->case_id,
+
+            'number' =>$request->number,
+
             'date' => $request->date,
+
             'description' => $request->description,
+
             'delay_date' => $request->delay_date,
+
             'delay_reasons'=>$request->delay_reasons,
+
         ]);
 
         session()->flash('Add', 'تم اضافة الجلسة بنجاح ');
@@ -69,13 +78,19 @@ class SessionController extends Controller
        $sections=Sessions::find($id);
 
        $sections->update([
+
         'date' => $request->date,
+
         'description' => $request->description,
+
         'delay_date' => $request->delay_date,
+
         'delay_reasons'=>$request->delay_reasons,
+
     ]);
 
     session()->flash('edit','تم نعديل الجلسة بنجاح');
+    
     return redirect('/sections');
 
     }

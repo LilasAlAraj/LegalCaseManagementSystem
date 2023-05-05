@@ -4,47 +4,59 @@ namespace App\Http\Controllers;
 
 use App\Models\Cases;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Cases_attachments;
 use App\Models\Cases_details;
 use Illuminate\Http\Request;
 
 class CasesDetailsController extends Controller
   {
 
-    public function edit($id)
+
+    public function store(Request $request)
+
+    {
+     Cases_details::create([
+
+      'title' => $request->title,
+
+      'id_Cases'=>$request->id_Cases,
+
+      'facts'=>$request->facts,
+
+      'legal_discussion'=>$request->legal_discussion
+
+     ]);
+           
+  
+    }
+ 
+    public function update(Request $request)
     {
 
-   
-        $cases = Cases::where('id',$id)->first();
+       $id = $request->id;
 
-        $details  = Cases_details::where('id_cases',$id)->get();
+       $this -> validate($request,[
+        'facts' => 'required',
+        'legal_discussion' => 'required',
+    ],[
 
-        $attachments  = Cases_attachments::where('cases_id',$id)->get();
+    'facts.required'=>'please fill the facts date',
+    'legal_discussion.required'=>'please fill the legal_discussion',
+      
+    ]);
 
-        return view('Cases.cases',compact('cases','details','attachments'));
-        
+       $cases_details=Cases_details::find($id);
+
+       $cases_details->update([
+
+        'facts' => $request->facts,
+
+        'legal_discussion' => $request->legal_discussion,
+    ]);
+
+    session()->flash('edit','تم نعديل التفاصيل  بنجاح');
+    return redirect('/cases');
+
     }
-
-
-
-
-   public function destroy(Request $request)
-
-   { 
-    
-    $cases=Cases_attachments::findOrFail($request->id_file);
-    
-    $cases->delete();
-
-    Storage::disk('public_uploads')->delete($request->cases_number.'/'.$request->file_name);
-
-    session()->flash('delete', 'تم حذف المرفق بنجاح');
-    
-    return back();
-   }
-
-
-
 
   }  
 

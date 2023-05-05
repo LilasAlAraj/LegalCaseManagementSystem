@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cases;
 use App\Models\Cases_attachments;
 use App\Models\Cases_details;
-use App\Models\Desicions;
 use App\Models\Enemy_Clients;
 use App\Models\Enemy_Lawyers;
-use App\Models\Sessions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -50,18 +48,41 @@ class CasesController extends Controller
             'case_number'=>'case_number',
             'case_Date' => 'required',
             'title' => 'title',
+            'case_room'=>'case_room',
             'judge'=> 'judge',
             'side_judge'=> 'side_judge',
+            'enemyClient_phone'=>'enemyClient_phone',
+            'enemy_lawyer_phone'=>'enemy_lawyer_phone',
+            'enemyLawyer_name'=>'enemyLawyer_name',
+            'enemyClient_name'=>'enemyClient_name',
+
         ]);
         Cases::create([
             'case_number'=>$request->case_number,
+
             'case_Date' => $request->case_Date,
+
             'court_id' => $request->court_id,
+
+            'case_room'=>$request->case_room,
+
             'title' => $request->title,
+
             'enemy_client_name'=>$request->enemy_client_name,
+
             'side_judge'=>$request->side_judge,
+
+            'enemyClient_name'=>$request->enemyClient_name,
+
+            'enemyLawyer_name'=>$request->enemyLawyer_name,
+
+            'enemy_lawyer_phone'=>$request->enemy_lawyer_phone,
+
+            'enemyClient_phone' =>$request->enemyClient_phone,
             
-            
+            'Status' => 'غير مدفوعة',
+
+            'Value_Status' => 2,
         ]);
         //-----المحاميين الخصم -------------------//
 
@@ -73,20 +94,11 @@ class CasesController extends Controller
 
         $enemy_lawyer->number_phone=$request->number_phone;
 
-        $case_id->enemy_lawyers()->save($enemy_lawyer);
-
-        // $case_id->enemy_clients()->save($request->enemy_client_name);
-        // $case_id->cases()->save($request->case_number);
-        // $case_id->save();
-
-
         //------------------الخصم-------------------//
-
 
         $case_id = Cases::latest()->first()->id;
  
         $enemy_client = new Enemy_Clients();
-
         
         $enemy_client->name=$request->enemy_client_name;
 
@@ -95,40 +107,40 @@ class CasesController extends Controller
         $case_id->enemy_clients()->save($enemy_client);
 
 
-        //------- القضية لها اكثر من جلسة ---------//
+        // //------- القضية لها اكثر من جلسة ---------//
          
-        $case_id = Cases::latest()->first()->id;
+        // $case_id = Cases::latest()->first()->id;
 
-        $sessions = new Sessions();
+        // $sessions = new Sessions();
 
-        $sessions->case_id = $case_id;
+        // $sessions->case_id = $case_id;
 
-        $sessions->date = $request->date;
+        // $sessions->date = $request->date;
 
-        $sessions->description = $request->description;
+        // $sessions->description = $request->description;
 
-        $sessions->delay_date =$request->delay_date;
+        // $sessions->delay_date =$request->delay_date;
 
-        $sessions->delay_reasons =$request->delay_reasons;
+        // $sessions->delay_reasons =$request->delay_reasons;
 
-        $sessions->save();
+        // $sessions->save();
 
-        ///-------  القضية لها اكثر من قرار ---------//
+        // ///-------  القضية لها اكثر من قرار ---------//
 
-          $case_id = Cases::latest()->first()->id;
+        //   $case_id = Cases::latest()->first()->id;
  
-          $desicions = new Desicions();
+        //   $desicions = new Desicions();
 
-          $desicions->number =$request->number; 
+        //   $desicions->number =$request->number; 
 
-          $desicions->case_id = $case_id;
+        //   $desicions->case_id = $case_id;
 
-          $desicions->description = $request->description;
+        //   $desicions->description = $request->description;
 
-          $desicions->date = $request->date;
+        //   $desicions->date = $request->date;
 
 
-          $desicions->save();
+        //   $desicions->save();
 
         //---------  تفاصيل القضية --------------//
 
@@ -138,12 +150,7 @@ class CasesController extends Controller
             Cases_details::create([
 
             'id_cases'=>$cases_id,
-
-            'facts'=>$request->facts,
-
-            'legal_discussion'=>$request->legal_discussion,
-
-            // 'user' => (Auth::user()->name),
+            'title' => $request->title,
             
 
         ]);
@@ -164,13 +171,19 @@ class CasesController extends Controller
 
             $attachments->cases_Number = $cases_Number;
 
-            $attachments->Created_by = Auth::user()->name;
+            
 
             $attachments->cases_id = $cases_id;
 
             $attachments->save();
 
             //-------- move pic ----------//
+
+
+            //رح يحفظ فقط اسم المرفق بالداتا بيز اما رح يحفظ المرفق على السيرفر 
+            
+            //---------public\Attachments\اسم المرفق\ رقم القضية ------
+
 
             $imageName = $request->pic->getClientOriginalName();
 
@@ -219,6 +232,26 @@ class CasesController extends Controller
         'case_Date'=>$request->case_Date,
 
         'court_id'=>$request->court_id,
+
+        'case_room'=>$request->case_room,
+
+        'title' => $request->title,
+
+        'enemy_client_name'=>$request->enemy_client_name,
+
+        'side_judge'=>$request->side_judge,
+
+        'enemyClient_name'=>$request->enemyClient_name,
+
+        'enemyLawyer_name'=>$request->enemyLawyer_name,
+
+        'enemy_lawyer_phone'=>$request->enemy_lawyer_phone,
+
+        'enemyClient_phone' =>$request->enemyClient_phone,  
+
+        'Status' => 'غير مدفوعة',
+
+        'Value_Status' => 2,
 
 
     ]);
@@ -288,18 +321,6 @@ class CasesController extends Controller
                 'Value_Status' => 1,
                 'Status' => $request->Status,
             ]);
-
-        
-         Cases_Details::create([
-                'id_Cases' => $request->id_Cases,
-                'Status' => $request->Status,
-                'Value_Status' => 1,
-                'facts' => $request->facts,
-                'legal_discussion' => $request->legal_discussion,
-                // 'user' => (Auth::user()->name),
-                
-            ]);
-         
         }
          else {
 
@@ -307,18 +328,7 @@ class CasesController extends Controller
                 'Value_Status' => 3,
                 'Status' => $request->Status,
             ]);
-            Cases_Details::create([
-                'id_Cases' => $request->id_Cases,
-                'Status' => $request->Status,
-                'Value_Status' => 1,
-                'facts' => $request->facts,
-                'legal_discussion' => $request->legal_discussion,
-                // 'user' => (Auth::user()->name),
-            ]);
         }
-          
-
-        
         session()->flash('Status_Update');
         
         return redirect('/cases');
@@ -364,9 +374,6 @@ class CasesController extends Controller
 
 
     }
-
-
- 
 
     }
 

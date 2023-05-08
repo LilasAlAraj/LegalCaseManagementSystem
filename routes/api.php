@@ -18,4 +18,24 @@ use App\Http\Controllers\Api\AccountsController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/Account',[AccountsController::class,'index']);
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+    Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::post('/refresh', [App\Http\Controllers\Api\AuthController::class, 'refresh']);
+    Route::get('/user-profile', [App\Http\Controllers\Api\AuthController::class, 'userProfile']);
+});
+
+
+Route::middleware(['jwt.verify'])->group(function () {
+
+  
+Route::resource('cases','App\Http\Controllers\Api\CasesController');
+
+
+
+});

@@ -13,17 +13,21 @@ use Illuminate\Support\Facades\Auth;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+ 
+Route::resource('login','App\Http\Controllers\loginController'); //
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
-    Auth::routes();
+    Auth::routes([]);
 
     Auth::routes(['register'=>false]);  //Don’t allow to user to register
-
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+   
+
     Route::resource('cases','App\Http\Controllers\CasesController');  // 🌷القضية
 
     Route::resource('CasesAttachments', 'App\Http\Controllers\CasesAttachmentController'); // 🌷مرفقات القضية

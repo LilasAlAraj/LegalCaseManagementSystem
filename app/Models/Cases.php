@@ -19,10 +19,10 @@ class Cases extends Model
         'judge_side',
         'Status',
         'Value_Status',
-        'enemyLawyer_name',
-        'enemy_lawyer_phone',
-        'enemyClient_name',
-        'enemyClient_phone'
+        'enemy_Lawyer_name',
+        'enemy_Lawyer_phone',
+        'enemy_Client_name',
+        'enemy_Client_phone'
     ];
 
     public function sessions()

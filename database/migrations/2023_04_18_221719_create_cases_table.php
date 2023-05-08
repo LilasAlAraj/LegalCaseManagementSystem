@@ -19,13 +19,13 @@ return new class extends Migration
             $table->integer('case_number');
             $table->date('case_Date');
             $table->string('judge');
-            $table->string('enemyLawyer_name');
-            $table->integer('enemy_lawyer_phone');
-            $table->string('enemyClient_name');
-            $table->integer('enemyClient_phone');
+            $table->string('enemy_Lawyer_name');
+            $table->integer('enemy_Lawyer_phone');
+            $table->string('enemy_Client_name');
+            $table->integer('enemy_Client_phone');
             $table->string('side_judge'); //مساعد القاضي 
             $table->string('case_room');
-            // $table->unsignedBigInteger('court_id')->nullable();
+            // $table->bigInteger('court_id');
             // $table->foreign('court_id')->references('id')->on('court')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

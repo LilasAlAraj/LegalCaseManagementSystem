@@ -11,8 +11,8 @@ class Enemy_Clients extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'name',
-        'number_phone',
+        'enemy_Client_name',
+        'enemy_Client_phone',
         'case_id'
     ];
     protected $dates = ['deleted_at'];

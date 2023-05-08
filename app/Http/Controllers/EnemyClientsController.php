@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cases;
 use App\Models\Enemy_Clients;
 use Illuminate\Http\Request;
 
@@ -19,15 +20,21 @@ class EnemyClientsController extends Controller
  public function store(Request $request)
  {
     $request->validate([
-        'name' =>'required|string|max:255',
-        'phone_number' =>'required',
+
+        'enemy_Client_name' =>'required|string|max:255',
+        
+        'enemy_Client_phone' =>'required',
     ]);
+
+    $case_id =Cases::latest()->first()->id;
 
     $enemy_client=new Enemy_Clients();
 
-    $enemy_client->name=$request->name;
+    $enemy_client->case_id=$request->case_id;
 
-    $enemy_client->phone_number=$request->phone_number;
+    $enemy_client->enemy_Client_name=$request->enemy_Client_name;
+
+    $enemy_client->enemy_Client_phone=$request->enemy_Client_phone;
 
     $enemy_client->save();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cases;
 use App\Models\Enemy_Lawyers;
 
 use Illuminate\Http\Request;
@@ -19,15 +20,28 @@ class EnemyLawyersController extends Controller
 
     {
         $request->validate([
-            'name' =>'required|max:255',
-            'number_phone' =>'required|max:255',
+            
+            'enemy_Lawyer_name' =>'required|max:255',
+
+            'enemy_Lawyer_phone' =>'required|max:255',
         
         ]);
         
-        $request->only(['name','number_phone']);
+        $case_id =Cases::latest()->first()->id;
 
-        $enemy_lawyer = Enemy_Lawyers::create($request->only(['name','case_id','number_phone']));
+        $enemy_lawyer = Enemy_Lawyers::create([
 
-        return back();
+            'enemy_Lawyer_name' => $request->enemy_Lawyer_name,
+
+            'enemy_Lawyer_phone' => $request->enemy_Lawyer_phone,
+
+            'case_id' => $case_id,
+
+        ]);
+        $enemy_lawyer->save();
+
+         return redirect()->route('enemy_lawyer.index');
+
+
     }
 }

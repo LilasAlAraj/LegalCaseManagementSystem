@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('/home');
+    return view('auth.login');
 });
 
     Auth::routes();
+
+    Auth::routes(['register'=>false]);  //Don’t allow to user to register
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     

@@ -17,6 +17,6 @@ class Desicions extends Model
 
     public function case()
     {
-        return $this->belongsTo(Cases::class);
+        return $this->belongsTo(Cases::class,'case_id', 'id');
     }
 }

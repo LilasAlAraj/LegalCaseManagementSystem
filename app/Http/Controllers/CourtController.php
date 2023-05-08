@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cases;
 use App\Models\Courts;
 
 use Illuminate\Http\Request;
@@ -102,17 +103,24 @@ class CourtController extends Controller
  }
 
  public function destroy(Request $request)
- {
- 
-     $id=$request->id;
+  {
 
-     Courts::find($id)->delete();
+    $MyCases_id = Cases::where('court_id',$request->id)->pluck('court_id');
 
-     session()->flash('delete','You delete the court');
+    if($MyCases_id->count() == 0){
 
-     return redirect('/courts');
+        $courts = Courts::findOrFail($request->id)->delete();
+
+        return redirect()->route('courts.index');
+    }
+
+    else{
+
+        return redirect()->route('courts.index');
+
+    }
 
 
- }
+}
 
 }

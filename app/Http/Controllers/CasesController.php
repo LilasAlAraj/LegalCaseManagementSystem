@@ -51,10 +51,10 @@ class CasesController extends Controller
             'case_room'=>'case_room',
             'judge'=> 'judge',
             'side_judge'=> 'side_judge',
-            'enemyClient_phone'=>'enemyClient_phone',
-            'enemy_lawyer_phone'=>'enemy_lawyer_phone',
-            'enemyLawyer_name'=>'enemyLawyer_name',
-            'enemyClient_name'=>'enemyClient_name',
+            'enemy_Client_phone'=>'enemy_Client_phone',
+            'enemy_lawyer_phone'=>'enemy_Lawyer_phone',
+            'enemy_Lawyer_name'=>'enemy_Lawyer_name',
+            'enemy_Client_name'=>'enemy_Client_name',
 
         ]);
         Cases::create([
@@ -72,13 +72,13 @@ class CasesController extends Controller
 
             'side_judge'=>$request->side_judge,
 
-            'enemyClient_name'=>$request->enemyClient_name,
+            'enemy_Client_name'=>$request->enemy_Client_name,
 
-            'enemyLawyer_name'=>$request->enemyLawyer_name,
+            'enemy_Lawyer_name'=>$request->enemy_Lawyer_name,
 
-            'enemy_lawyer_phone'=>$request->enemy_lawyer_phone,
+            'enemy_lawyer_phone'=>$request->enemy_Lawyer_phone,
 
-            'enemyClient_phone' =>$request->enemyClient_phone,
+            'enemy_Client_phone' =>$request->enemy_Client_phone,
             
             'Status' => 'غير مدفوعة',
 
@@ -88,23 +88,43 @@ class CasesController extends Controller
 
         $case_id = Cases::latest()->first()->id;
 
-        $enemy_lawyer=new Enemy_Lawyers();          
+        $List_Enemy_Lawyers = $request->List_Enemy_Lawyers;
 
-        $enemy_lawyer->name=$request->enemy_lawyer_name;
+        $validated = $request->validated();
 
-        $enemy_lawyer->number_phone=$request->number_phone;
+        foreach ($List_Enemy_Lawyers as $List_Enemy_Lawyer) {
+
+            $Enemy_Lawyers = new Enemy_Lawyers();
+
+            $Enemy_Lawyers->enemy_Lawyer_name = $List_Enemy_Lawyer['enemy_Lawyer_name'];
+
+            $Enemy_Lawyers->enemy_Lawyer_phone = $List_Enemy_Lawyer['enemy_lawyer_phone'];
+
+            $Enemy_Lawyers->case_id = $List_Enemy_Lawyer['case_id'];
+
+            $Enemy_Lawyers->save();
+        }
 
         //------------------الخصم-------------------//
 
-        $case_id = Cases::latest()->first()->id;
- 
-        $enemy_client = new Enemy_Clients();
-        
-        $enemy_client->name=$request->enemy_client_name;
+       
 
-        $enemy_client->number_phone=$request->number_phone;
- 
-        $case_id->enemy_clients()->save($enemy_client);
+        $List_Enemy_Clients= $request->List_Enemy_Clients;
+
+        $validated = $request->validated();
+
+        foreach ($List_Enemy_Clients as $List_Enemy_Client) {
+
+            $Enemy_Clients = new Enemy_Clients();
+
+            $Enemy_Clients->enemy_Lawyer_name = $List_Enemy_Client['enemy_Lawyer_name'];
+
+            $Enemy_Clients->enemy_lawyer_phone = $List_Enemy_Client['enemy_lawyer_phone'];
+
+            $Enemy_Clients->case_id = $List_Enemy_Client['case_id'];
+
+            $Enemy_Clients->save();
+        }
 
 
         // //------- القضية لها اكثر من جلسة ---------//

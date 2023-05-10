@@ -40,6 +40,12 @@ Route::get('/', function () {
   
     Route::resource('CasesDetails' ,'App\Http\Controllers\CasesDetailsController');  // 🌷تفاصيل القضية
 
+    Route::resource('task','App\Http\Controllers\TasksController');//المهام
+    
+    Route::resource('task_type','App\Http\Controllers\TasksTypeController');// task type
+
+    Route::post('/update_task_status/{id}', 'TasksController@update_task_status')->name('update_task_status');//تعديل حالة المهمة
+
     Route::get('download/{cases_number}/{file_name}', 'App\Http\Controllers\CasesAttachmentController@get_file'); // 🌷تنزيل مرفق 
 
     Route::get('View_file/{cases_number}/{file_name}', 'App\Http\Controllers\CasesAttachmentController@open_file'); //🌷 عرض مرفق
@@ -73,5 +79,6 @@ Route::get('/', function () {
     Route::resource('roles','RoleController');
 
     Route::resource('users','App\Http\Controllers\UserController');
+
         
         });

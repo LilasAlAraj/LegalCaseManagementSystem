@@ -22,7 +22,9 @@ class Cases extends Model
         'enemyLawyer_name',
         'enemy_lawyer_phone',
         'enemyClient_name',
-        'enemyClient_phone'
+        'enemyClient_phone',
+
+        //'task_id'
     ];
 
     public function sessions()
@@ -50,5 +52,9 @@ class Cases extends Model
         return $this->belongsToMany(User::class, 'client_of_case');
     }
 
+    public function tasks(){
+
+        return $this->belongsToMany(tasks::class ,'case_of_task');
+    }
     
 }

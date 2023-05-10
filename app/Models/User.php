@@ -16,7 +16,22 @@ use Notifiable;
 */
 protected $fillable = [
 
-    'first_name', 'last_name', 'mother_name','father_name','first_name', 'email', 'password','phone','location','roles_name','Status','birth_date','birth_place',
+    'first_name',
+    'last_name', 
+    'mother_name',
+    'father_name',
+    'birth_date',
+    'birth_place', 
+    'email', 
+    'roles_name',
+    'Status',
+    'password',
+    'location',
+    'phone',
+
+    
+    //'task_id'
+    
 ];
 /**
 * The attributes that should be hidden for arrays.
@@ -45,4 +60,8 @@ public function case_1()
     return $this->belongsToMany(Cases::class, 'client_of_case');
 }
 
+public function tasks(){
+
+    return $this->belongsToMany(Task::class ,'user_of_task');
+}
 }

@@ -41,7 +41,7 @@ class TasksTypeContorller extends Controller
         'task_type_name.required'=>'please insert the task type name',
           
         ]);
-        $task_type->task_type_name =$request->task_name;
+        $task_type->task_type_name =$request->task_type_name;
         $task_type->save();
         return redirect()->route('task_type.index');
     }

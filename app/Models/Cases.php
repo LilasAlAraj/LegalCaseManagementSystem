@@ -19,10 +19,19 @@ class Cases extends Model
         'judge_side',
         'Status',
         'Value_Status',
+<<<<<<< HEAD
         'enemy_Lawyer_name',
         'enemy_Lawyer_phone',
         'enemy_Client_name',
         'enemy_Client_phone'
+=======
+        'enemyLawyer_name',
+        'enemy_lawyer_phone',
+        'enemyClient_name',
+        'enemyClient_phone',
+
+        //'task_id'
+>>>>>>> 5c601ecfd05b487c3837da232c11ad0be0aabae8
     ];
 
     public function sessions()
@@ -50,5 +59,9 @@ class Cases extends Model
         return $this->belongsToMany(User::class, 'client_of_case');
     }
 
+    public function tasks(){
+
+        return $this->belongsToMany(tasks::class ,'case_of_task');
+    }
     
 }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
  
-Route::resource('login','App\Http\Controllers\loginController'); //
+Route::resource('login','App\Http\Controllers\Auth\LoginController'); //
 
 Route::get('/', function () {
     return view('auth.login');

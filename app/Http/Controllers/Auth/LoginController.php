@@ -41,6 +41,7 @@ class LoginController extends Controller
       protected function credentials(\Illuminate\Http\Request $request)
     {
         return ['phone' => $request->phone, 'password' => $request->password, 'status' => 'مفعل'];
+        
     }
 
     
